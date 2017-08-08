@@ -1,0 +1,45 @@
+데이터/파일 정보
+
+fred
+      01_init_category.py  => 최초 category 데이터 생성
+      02_init_seriess.py   => 최초 seriess 데이터 생성
+      03_init_observ.py    => 최초 observ 데이터 생성
+      04_update.py         => 2주 내의 데이터 업데이트 (fred api 자체가 2주치만 제공)
+      config.py            => 경로, 메서드 등 공통을 모음 (아직 명명법은 미흡)
+      hist.txt             => 개발 이력 및 기타 정보
+      test_thread_01.py    => 스레드를 활용하여 약 10 ~ 100 배의 속도 가능. 참고하려고 테스트용으로 만듬.
+
+data
+└─fred
+    ├─category
+    │      (cate_id).json                => category id 하나에 해당하는 정보들(series id list 포함)
+    │      ...
+    ├─ids  (id 및 메타파일들..)
+    │      categories.csv                => category id list
+    │      categories.json               => category json array
+    │      last_update_start_time.txt    => 업데이트를 위한 시간 데이터
+    │      series.csv                    => series id list
+    │
+    └─series
+            (series_id).json             => observ를 포함
+            ACILT100.json
+            ACLOB.json
+            ACLT100.json
+            ALFAPGOB.json
+            ALFAPGT100.json
+            ALSREOB.json
+            ALSRET100.json
+            ...
+
+
+2017-08-07 업데이트 내용 by srkim
+
+1. csv 쓰는 로직이 최초에 0이 들어가게 되어 있어서 판다스 안쓰고 심플하게 바꿈.
+2. HTTPSConnection 을 쓰면서 항상 동일한 3줄이 등장하여 config에 메서드 만듬.
+3. str() 이 아닌 json.dumps를 통해 쌍따옴표로 json 저장되게 함.
+4. 테스트용 실무용 각각 실행해볼 수 있도록 상단에 변수 지정
+
+============
+
+그외 정보..
+config.py 에 여러 메모를 했으니 참고할 것....
