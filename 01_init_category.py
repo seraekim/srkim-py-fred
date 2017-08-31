@@ -4,7 +4,7 @@ from config import *
 # 테스트 용으로, 값을 넣으면 해당 숫자만큼만 category id를 가져옴.
 # 테스트가 아니라면 None을 입력
 # category_limit = None
-category_limit = 10
+category_limit = 200
 
 cnt = 0
 cate_id_list = []

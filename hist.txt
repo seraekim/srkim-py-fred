@@ -6,8 +6,11 @@ fred
       03_init_observ.py    => 최초 observ 데이터 생성
       04_update.py         => 2주 내의 데이터 업데이트 (fred api 자체가 2주치만 제공)
       config.py            => 경로, 메서드 등 공통을 모음 (아직 명명법은 미흡)
+      api.py               => python fred api
       hist.txt             => 개발 이력 및 기타 정보
-      test_thread_01.py    => 스레드를 활용하여 약 10 ~ 100 배의 속도 가능. 참고하려고 테스트용으로 만듬.
+      test_01_thread.py    => 스레드를 활용하여 약 10 ~ 100 배의 속도 가능. 참고하려고 테스트용으로 만듬.
+      test_02_refine.py    => json 을 표준화하기 테스트.
+      test_03_api_usage.py => api.py 사용법
 
 data
 └─fred
@@ -21,16 +24,23 @@ data
     │      series.csv                    => series id list
     │
     └─series
-            (series_id).json             => observ를 포함
+        └─observ
+            (series_id).json           => 파일별 observ를 포함
             ACILT100.json
             ACLOB.json
             ACLT100.json
-            ALFAPGOB.json
-            ALFAPGT100.json
-            ALSREOB.json
-            ALSRET100.json
             ...
 
+        (series_id).json                 => 파일별 series_id meta 를 포함
+         ACILT100.json
+         ACLOB.json
+         ACLT100.json
+        ...
+
+2017-08-16 업데이트 내용 by srkim
+1. /fred/series 에는 series_id 별로 메타 정보가 저장되게끔 함. 03_init에 추가 함.
+2. 대신에 /fred/series/observ 로 series_id 별 데이터가 저장되게 함.
+3. api.py 추가
 
 2017-08-07 업데이트 내용 by srkim
 
@@ -44,3 +54,4 @@ data
 
 그외 정보..
 config.py 에 여러 메모를 했으니 참고할 것....
+https://research.stlouisfed.org/docs/api/fred/series_observations.html#output_type

@@ -1,5 +1,4 @@
 import json
-
 # urls= ==============================================================================================================
 
 api_key = '831824c743ac50595faa38ddd29ae7c5'
@@ -16,17 +15,22 @@ fred_cate_child_url = '/fred/category/children'+fred_common_url+'&category_id='
 # fred_cate_series_url -> series.csv(series_id list), fred_cate_file_path/cate_id.json (cate 별 매핑된 session json)
 fred_cate_series_url = '/fred/category/series'+fred_common_url+'&category_id='
 
-# fred_series_observ_url -> fred_series_file_path/series_id.json (series 별 시계열 json)
-fred_series_observ_url = '/fred/series/observations'+fred_common_url+'&series_id='
+# fred_series_file_path/series_id.json (series meta json)
+fred_series_url = '/fred/series'+fred_common_url+'&series_id='
+
+# fred_series_observ_url -> fred_observ_file_path/series_id.json (series 별 시계열 json)
+fred_series_observ_url = '/fred/series/observations'+fred_common_url + '&realtime_start=2017-08-01&series_id='
 
 fred_series_update_url = '/fred/series/updates'+fred_common_url
 
 # files ==============================================================================================================
 
 # file path #
-fred_ids_file_path = '../data/fred/ids/'
-fred_cate_file_path = '../data/fred/category/'
-fred_series_file_path = '../data/fred/series/'
+root_file_path = '../'
+fred_ids_file_path = root_file_path + 'data/fred/ids/'
+fred_cate_file_path = root_file_path + 'data/fred/category/'
+fred_series_file_path = root_file_path + 'data/fred/series/'
+fred_observ_file_path = fred_series_file_path + 'observ/'
 
 # file #
 fred_ids_file_cate_csv = fred_ids_file_path + 'categories.csv'
@@ -44,10 +48,45 @@ fred_ids_file_last_update_time = fred_ids_file_path + 'last_update_start_time.tx
 
 # methods =============================================================================================================
 
-def req(conn, url):
+# 강제로 접속이 끊기는 경우가 매우매우 가끔 있다. 재시도 횟수 설정.
+retry = 10
+
+def req(conn, url, is_retry=False):
+
+    global retry
+    if is_retry:
+        retry -= 1
+        if not retry:
+            raise Exception
+
     conn.request("GET", url)
-    res = conn.getresponse()
-    return json.loads(res.read().decode('utf-8'))
+    try:
+        res = conn.getresponse()
+        retry = 10
+        return json.loads(res.read().decode('utf-8'))
+    except:
+        print('[retry]', retry)
+        req(conn, url, True)
+
+
+def to_stand_json(js):
+    js['id'] = 'fred_' + js['id']
+    js['unit'] = js.pop('units')
+    js['last_update'] = js.pop('last_updated')
+    try:
+        js['note'] = js.pop('notes')
+    except Exception:
+        js['note'] = ''
+
+    js['series_attr'] = {
+        'realtime_start': js.pop('realtime_start')
+        , 'realtime_end': js.pop('realtime_end')
+        , 'frequency_short': js.pop('frequency_short')
+        , 'units_short': js.pop('units_short')
+        , 'seasonal_adjustment_short': js.pop('seasonal_adjustment_short')
+        , 'popularity': js.pop('popularity')
+    }
+
 
 # tips ===============================================================================================================
 """업데이트 관련 : 금요일 오후 4~5시 까지 하고 업데이트 안함..

@@ -1,6 +1,7 @@
 import time
 from http.client import HTTPSConnection
 from config import *
+import os
 
 """
 전제조건 : last_update_start_time.txt 에 마지막 지난 업데이트 시작 시간이 있어야 함.
@@ -16,7 +17,7 @@ method_cnt = 0
 is_end = False
 
 # api 상 1000이 기본값, 바꾸게되면 limit, offset도 동일하게 적용해야 데이터 안 꼬인다.
-chunk_unit = 10
+chunk_unit = 1000
 update_limit = chunk_unit
 update_offset = 0
 
@@ -48,6 +49,7 @@ def get_update_series(series_list):
         # last_update_start_time.txt 보다 last_updated 가 이전이 되면 더 이상 업데이트는 없는 걸로 판단
         is_end = update_time < last_start_time
         print(cnt, update_time, update_id)
+
         if is_end:
             # 업데이트 '시작'을 기록하고 종료.. 업데이트 '종료' 시간이 아닌 이유는, 기록 되는 동안에도 시간이
             # 흘러가기 때문에,..
@@ -58,8 +60,20 @@ def get_update_series(series_list):
 
             break
         else:
+            # series meta 도 업데이트, 단 파일이 존재하면 안 함.
+            filename = fred_series_file_path + update_id + '.json'
+            if os.path.isfile(filename):
+                print('[파일존재]', filename)
+            else:
+                with open(filename, 'w', encoding='utf-8') as f2:
+                    ret2 = req(conn, fred_series_url + update_id)['seriess'][0]
+                    # series 메타 json 표준화
+                    # to_stand_json(ret2)
+                    f2.write(json.dumps(ret2))
+
+            # observ는 파일이 이미 존재하든 안하든 쓰면 됨.
             ret = req(conn, fred_series_observ_url + update_id)
-            with open(fred_series_file_path + update_id + '.json', 'w', encoding='utf-8') as f:
+            with open(fred_observ_file_path + update_id + '.json', 'w', encoding='utf-8') as f:
                 f.write(json.dumps(ret))
 
     if not is_end:

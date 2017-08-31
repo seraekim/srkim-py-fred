@@ -23,7 +23,7 @@ for i in range(concurrent):
 
 path = '/fred/series/observations?api_key=831824c743ac50595faa38ddd29ae7c5&file_type=json&series_id='
 
-for url in [path+'EQTA',path+'EQTA',path+'EQTA',path+'EQTA',path+'EQTA']:
+for url in [path+'EQTA',path+'EQTA']:
     q.put(url)
 
 q.join()

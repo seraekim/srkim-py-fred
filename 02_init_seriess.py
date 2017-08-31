@@ -25,10 +25,12 @@ for cate_id in cate_id_list:
 
         if result_len:
             # 카테고리별 seriess 저장
-            series = {'categories': cate_id, 'seriess': ret}
+            series_ids_of_cate = [sub['id'] for sub in ret]
+            series = {'categories': cate_id, 'seriess': series_ids_of_cate}
             with open(filename, 'w', encoding='utf-8') as f:
                 f.write(json.dumps(series))
 
+            series_id_list += series_ids_of_cate
             for sub in ret:
                 series_id = sub['id']
                 series_id_list.append(series_id)
