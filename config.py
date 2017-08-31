@@ -1,7 +1,7 @@
 import json
 # urls= ==============================================================================================================
 
-api_key = '831824c743ac50595faa38ddd29ae7c5'
+api_key = 'your_api_key'
 
 # url #
 fred_domain = 'api.stlouisfed.org'
