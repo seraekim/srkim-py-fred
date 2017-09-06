@@ -3,6 +3,7 @@ import json
 
 # 간이 파일 서버 테스를 위해...
 # browsepy 127.0.0.1 8080 --directory D:/srkim/python/project/data
+# db에 넣어서 서비스하게 되면 url 경로등은 무조건 바뀔 것...
 
 conn = HTTPConnection('localhost:8080')
 

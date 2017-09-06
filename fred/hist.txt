@@ -1,0 +1,74 @@
+dw
+├─data => 원본 데이터 관리
+│  └─fred
+│      ├─init => 최초
+│      │  ├─category
+│      │  │      10.json => cate id 별 series 리스트
+│      │  │      ...
+│      │  │
+│      │  ├─ids
+│      │  │      categories.csv  => cate id list
+│      │  │      categories.json => 모든 cate id 의 부모자식 관계 및 메타 정보를 하나의 json으로
+│      │  │      series.csv      => series id list
+│      │  │
+│      │  └─series
+│      │      │  ACILOB.json     => series meta
+│      │      │  ...
+│      │      │
+│      │      └─observ
+│      │              ACILOB.json => 해당 series의 observation
+│      │              ...
+│      │
+│      └─update => 업데이트
+│          │  last_update_start_time.txt
+│          │
+│          └─series
+│              │  R2500VLTR.json
+│              │  ...
+│              │
+│              └─observ
+│                      R2500VLTR.json
+│                      ...
+│
+├─dw => 소스코드 관리
+│  │
+│  ├─common
+│  │     config.py => 모든 agency가 공통적으로 쓰는 설정 정보
+│  │     util.py   => 모든 agency가 공통적으로 쓰는 util
+│  │  
+│  └─fred
+│       01_init_category.py            => category 데이터 생성
+│       02_init_seriess_thread.py      => category 별 seriess list 데이터 생성
+│       03_init_seriess_meta_thread.py => seires meta 생성
+│       04_init_observ_thread.py       => observation 생성
+│       05_update.py                   => fred api update 목록을 가져와서 series meta / observation 갱신
+│       06_parse_init.py               => init 데이터 파싱
+│       07_parse_update.py             => update 데이터 파싱
+│       08_db.py                       => db 작업 (현재 작성 안됨)
+│       api.py                         => python fred api 라이브러리
+│       hist.txt                       => 소스 정보
+│       path.py                        => url / file path 관련 정보
+│       util.py                        => fred의 util
+│       test_03_api_usage.py           => api.py 사용법
+│  
+└─parsed => parsed 데이터 관리, data 폴더 구조를 그대로 활용
+    └─fred
+        ├─init
+        │  └─series
+        │      │  ACILOB.json
+        │      │  ...
+        │      │
+        │      └─observ
+        │              ACILOB.json
+        │              ...
+        │
+        └─update
+           └─series
+               │  R2500VLTR.json
+               │  ...
+               │
+               └─observ
+                       R2500VLTR.json
+                       ...
+
+마지막 업데이트 :

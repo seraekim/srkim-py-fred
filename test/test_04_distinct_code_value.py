@@ -1,4 +1,4 @@
-from config import *
+import json
 import os
 
 series_file_list = os.listdir(fred_series_file_path)

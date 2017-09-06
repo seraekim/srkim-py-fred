@@ -1,5 +1,5 @@
 import unittest
-import api
+from fred import api
 
 # api 사용 방법
 
