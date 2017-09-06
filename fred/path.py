@@ -1,7 +1,7 @@
 # from common.config import *
 # urls= ==============================================================================================================
 
-api_key = '831824c743ac50595faa38ddd29ae7c5'
+api_key = 'api'
 
 # url #
 fred_domain = 'api.stlouisfed.org'
