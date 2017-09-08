@@ -25,10 +25,11 @@ fred_series_observ_url = '/fred/series/observations'+fred_common_url + '&series_
 
 fred_series_update_url = '/fred/series/updates'+fred_common_url
 
+fred_series_geo_url = '/fred/series/tags'+fred_common_url + '&series_id='
 # files ==============================================================================================================
 
 # file path #
-_home = 'l:/python'  # get_config('local', 'HOME')
+_home = 'd:/python'  # get_config('local', 'HOME')
 _init = _home + '/data/fred/init/'
 _update = _home + '/data/fred/update/'
 
