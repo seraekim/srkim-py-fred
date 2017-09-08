@@ -24,6 +24,8 @@ lock = Lock()
 
 run_count = 0
 
+# maximum 1000
+chunk_unit = 1000
 
 def main(retry=False):
 
@@ -52,8 +54,22 @@ def main(retry=False):
                 print('[파일존재]', filename)
             else:
                 try:
-                    ret = req(fred_cate_series_url + str(cate_id))['seriess']
-                    time.sleep(sleep_time)
+                    ret = req(fred_cate_series_url + str(cate_id) +'&limit=' + str(chunk_unit) +'&offset='
+                              + str(chunk_unit*0))
+                    # print(ret)
+                    series_count = ret['count']
+                    v = series_count // chunk_unit
+                    if series_count % chunk_unit:
+                        v += 1
+                    s_l = []
+                    s_l += ret['seriess']
+                    for mult in range(1, v):
+                        # print(cate_id, mult, v)
+                        off = chunk_unit * mult
+                        s_l += req(fred_cate_series_url + str(cate_id) + '&limit=' + str(chunk_unit) + '&offset='
+                                   + str(off))['seriess']
+
+                    # time.sleep(sleep_time)
                     # ret 가져오기가 성공한다면 fail 된 파일을 지운다.
                     if retry:
                         os.remove(filename + '_fail')
@@ -63,11 +79,11 @@ def main(retry=False):
                     q.task_done()
                     continue
 
-                result_len = len(ret)
+                result_len = len(s_l)
 
                 if result_len:
                     # 카테고리별 seriess 저장
-                    series_ids_of_cate = [sub['id'] for sub in ret]
+                    series_ids_of_cate = [sub['id'] for sub in s_l]
                     series = {'categories': cate_id, 'seriess': series_ids_of_cate}
                     with open(filename, 'w', encoding='utf-8') as f:
                         f.write(json.dumps(series))

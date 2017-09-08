@@ -6,7 +6,7 @@ from fred.path import *
 from fred.util import *
 
 """
-전제조건 : categories.csv(01_init_category.py 를 실행) 가 존재하여야 함.
+전제조건 : series.csv(02_init_seriess_thread.py 실행) 존재해야 함.
 thread를 쓰지 않겠다면 concurrent = 1 로 지정.
 """
 
@@ -23,6 +23,8 @@ series_cnt = 0
 lock = Lock()
 
 run_count = 0
+
+chunk_unit = 100000
 
 def main(retry=False):
     global series_id_list
@@ -49,7 +51,21 @@ def main(retry=False):
                 print('[파일존재]', filename)
             else:
                 try:
-                    ret = req(fred_series_observ_url + series_id)
+                    ret = req(fred_series_observ_url + series_id + '&limit=' + str(chunk_unit) + '&offset=' + str(0))
+                    # print(ret)
+                    observ_count = ret['count']
+                    v = observ_count // chunk_unit
+                    if observ_count % chunk_unit:
+                        v += 1
+                    o_l = []
+                    o_l += ret['observations']
+                    for mult in range(1, v):
+                        # print(series_id, mult, v)
+                        off = chunk_unit * mult
+                        o_l += req(fred_series_observ_url + series_id + '&limit=' + str(chunk_unit) + '&offset='
+                                   + str(off))['observations']
+
+                    ret['observations'] = o_l
                     # ret 가져오기가 성공한다면 fail 된 파일을 지운다.
                     if retry:
                         os.remove(filename + '_fail')
