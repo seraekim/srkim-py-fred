@@ -1,4 +1,4 @@
-# from common.config import *
+from common.config import *
 # urls= ==============================================================================================================
 
 api_key = 'api'
@@ -24,11 +24,11 @@ fred_series_observ_url = '/fred/series/observations'+fred_common_url + '&series_
 #fred_series_observ_url = '/fred/series/observations'+fred_common_url + '&realtime_start=2017-08-01&series_id='
 
 fred_series_update_url = '/fred/series/updates'+fred_common_url
-
+fred_series_geo_url = '/fred/series/tags'+fred_common_url + '&series_id='
 # files ==============================================================================================================
 
 # file path #
-_home = 'l:/python'  # get_config('local', 'HOME')
+_home = get_config('product', 'HOME')
 _init = _home + '/data/fred/init/'
 _update = _home + '/data/fred/update/'
 
@@ -43,14 +43,18 @@ update_series_path = _update + 'series/'
 update_observ_path = update_series_path + 'observ/'
 
 # parsed 경로
+parsed_init_cate_path = str.replace(init_ids_path, '/data/', '/parsed/')
 parsed_init_series_path = str.replace(init_series_path, '/data/', '/parsed/')
 parsed_init_observ_path = str.replace(init_observ_path, '/data/', '/parsed/')
 parsed_update_series_path = str.replace(update_series_path, '/data/', '/parsed/')
 parsed_update_observ_path = str.replace(update_observ_path, '/data/', '/parsed/')
 
 # file #
+# 전체 카테고리 목록
 ids_cate_csv = init_ids_path + 'categories.csv'
+# 사용자 정의 카테고리 목록
+ids_cate_product_csv = init_ids_path + 'categories_product.csv'
 ids_cate_json = init_ids_path + 'categories.json'
+parsed_ids_cate_json = parsed_init_cate_path + 'categories.json'
 ids_series_csv = init_ids_path + 'series.csv'
 last_update_time = _update + 'last_update_start_time.txt'
-

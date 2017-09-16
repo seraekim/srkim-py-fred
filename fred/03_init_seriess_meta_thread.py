@@ -1,5 +1,12 @@
-import time
+"""
+마지막 업데이트 : 2017-09-13
+파일명 : 03_init_seriess_meta_thread.py
+
+series.csv 로부터 가져온 series list 들을 thread를 활용하여
+시리즈 메타 파일을 {{series_id}}.json으로 저장한다.
+"""
 import glob
+
 from queue import Queue
 from threading import Thread, Lock
 
@@ -7,7 +14,7 @@ from fred.path import *
 from fred.util import *
 
 """
-전제조건 : categories.csv(01_init_category.py 를 실행) 가 존재하여야 함.
+전제조건 : series.csv(02_init_seriess_thread.py 실행) 존재해야 함.
 thread를 쓰지 않겠다면 concurrent = 1 로 지정.
 """
 # path 없으면 자동 생성
@@ -51,7 +58,16 @@ def main(retry=False):
             else:
                 try:
                     ret = req(fred_series_url + series_id)['seriess'][0]
-                    time.sleep(sleep_time)
+                    geo_ret = req(fred_series_geo_url + str(series_id))
+
+                    geo = ''
+                    for it in geo_ret['tags']:
+                        if it['group_id'] == 'geo':
+                            geo = it['name']
+                            break
+                    ret['geo'] = geo
+
+                    # time.sleep(sleep_time)
                     # ret 가져오기가 성공한다면 fail 된 파일을 지운다.
                     if retry:
                         os.remove(filename + '_fail')

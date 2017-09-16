@@ -1,5 +1,9 @@
-# json 표준화 하여 parsed에 쌓기
+"""
+마지막 업데이트 : 2017-09-13
+파일명 : 07_parse_update.py
 
+크롤링한 데이터는 크게 init과 update로 분리되어 관리되는데, 이것은 update만을 파싱한다.
+"""
 import glob
 
 from fred.path import *

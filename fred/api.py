@@ -1,3 +1,10 @@
+"""
+마지막 업데이트 : 2017-09-13
+파일명 : api.py
+
+파일서버로 부터 REST 서비스가 제공된다 가정하고 만든 파이선 전용 api 이다.
+몽고디비 또는 검색엔진 등을 활용하게 되면 어차피 처음부터 만들어야 할 것이다.
+"""
 from http.client import HTTPConnection
 import json
 

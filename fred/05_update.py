@@ -1,3 +1,11 @@
+"""
+마지막 업데이트 : 2017-09-13
+파일명 : 05_update.py
+
+fred update url을 통해서 가져온 series_id 들을 가지고서
+03, 04 파일을 thread 없이 실행하여 업데이트 한다. 하루의 업데이트 개수는 수천건 정도이다.
+현재 이력(빈티지)관리에 대해서는 진행된 바 없으며, 파일을 받는 시점에서 깨끗이 지우고 받는다.
+"""
 from fred.path import *
 from fred.util import *
 
@@ -16,6 +24,7 @@ is_end = False
 
 # api 상 1000이 기본값, 바꾸게되면 limit, offset도 동일하게 적용해야 데이터 안 꼬인다.
 chunk_unit = 1000
+observ_chunk_unit = 100000
 update_offset = 0
 
 # 업데이트 시작 시간을 담아둠
@@ -77,7 +86,20 @@ def get_update_series(series_list):
 
             try:
                 # observ 업데이트
-                ret = req(fred_series_observ_url + update_id)
+                ret = req(fred_series_observ_url + update_id + '&limit=' + str(observ_chunk_unit) + '&offset=' + str(0))
+                observ_count = ret['count']
+                v = observ_count // observ_chunk_unit
+                if observ_count % observ_chunk_unit:
+                    v += 1
+                o_l = []
+                o_l += ret['observations']
+                for mult in range(1, v):
+                    # print(series_id, mult, v)
+                    off = observ_chunk_unit * mult
+                    o_l += req(fred_series_observ_url + update_id + '&limit=' + str(observ_chunk_unit) + '&offset='
+                               + str(off))['observations']
+
+                ret['observations'] = o_l
                 with open(update_observ_path + update_id + '.json', 'w', encoding='utf-8') as f:
                     f.write(json.dumps(ret))
             except:
