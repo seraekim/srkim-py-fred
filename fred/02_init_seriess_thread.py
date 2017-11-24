@@ -125,7 +125,7 @@ main()
 series_id_list = []
 for cate_json in glob.glob(init_cate_path + "*.json"):
     js = json.loads(open(cate_json).read())
-    series_id_list += js['seriess']
+    series_id_list += js['series']
 
 # series id만 따로 저장
 if series_id_list:
